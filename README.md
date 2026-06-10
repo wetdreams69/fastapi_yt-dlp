@@ -55,10 +55,13 @@ The `COOKIES_FILE` env var is pre-configured to `/cookies/cookies.txt` inside th
 2. Create a secret file with the path `/etc/secrets/cookies.txt` and paste your cookies content.
 3. Set the `COOKIES_FILE` environment variable to `/etc/secrets/cookies.txt`.
 
+> [!NOTE]
+> Render mounts secret files on a read-only filesystem (`/etc/secrets/`). The service handles this automatically by copying the cookies file to `/tmp/` at startup before passing it to yt-dlp, which needs write access to persist session updates.
+
 ### On Fly.io
 
-1. Store the cookies file as a Fly secret or use a persistent volume.
-2. Set the `COOKIES_FILE` environment variable via `fly secrets`:
+1. Store the cookies file using a persistent volume and mount it at `/cookies/cookies.txt`.
+2. Set the `COOKIES_FILE` environment variable:
    ```bash
    fly secrets set COOKIES_FILE=/cookies/cookies.txt
    ```
