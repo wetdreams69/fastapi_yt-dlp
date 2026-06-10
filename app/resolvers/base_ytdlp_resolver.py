@@ -1,3 +1,4 @@
+import logging
 import shutil
 import tempfile
 from pathlib import Path
@@ -5,6 +6,8 @@ from yt_dlp import YoutubeDL
 from yt_dlp.utils import DownloadError
 from app.models import StreamInfo
 from app.resolvers.resolver_interface import StreamResolver, ResolutionError
+
+logger = logging.getLogger(__name__)
 
 
 class YtDlpBaseResolver(StreamResolver):
@@ -15,17 +18,18 @@ class YtDlpBaseResolver(StreamResolver):
             "no_warnings": True,
         }
         if cookies_file:
-            self.options["cookiefile"] = self._writable_copy(cookies_file)
+            writable = self._writable_copy(cookies_file)
+            if writable:
+                self.options["cookiefile"] = writable
 
-    def _writable_copy(self, source: str) -> str:
+    def _writable_copy(self, source: str) -> str | None:
         src = Path(source)
         if not src.exists():
-            raise ResolutionError(f"Cookies file not found: {source}")
-        if src.parent == Path(tempfile.gettempdir()):
-            return source
-        dest = Path(tempfile.gettempdir()) / "yt_dlp_cookies.txt"
-        shutil.copy2(src, dest)
-        return str(dest)
+            logger.warning("Cookies file not found at %s — starting without cookies.", source)
+            return None
+        tmp = Path(tempfile.gettempdir()) / "yt_dlp_cookies.txt"
+        shutil.copy2(src, tmp)
+        return str(tmp)
 
     def resolve(self, url: str) -> StreamInfo:
         try:

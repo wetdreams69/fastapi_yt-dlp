@@ -53,10 +53,13 @@ The `COOKIES_FILE` env var is pre-configured to `/cookies/cookies.txt` inside th
 
 1. In the Render dashboard, go to your service → **Secret Files**.
 2. Create a secret file with the path `/etc/secrets/cookies.txt` and paste your cookies content.
-3. Set the `COOKIES_FILE` environment variable to `/etc/secrets/cookies.txt`.
+3. In **Environment**, set `COOKIES_FILE` = `/etc/secrets/cookies.txt`.
+
+> [!IMPORTANT]
+> Make sure `COOKIES_FILE` points to the Secret File path (`/etc/secrets/cookies.txt`), not to `/tmp/`. The service copies the file to `/tmp/` internally at startup — you should never set `COOKIES_FILE=/tmp/...` directly.
 
 > [!NOTE]
-> Render mounts secret files on a read-only filesystem (`/etc/secrets/`). The service handles this automatically by copying the cookies file to `/tmp/` at startup before passing it to yt-dlp, which needs write access to persist session updates.
+> If the file is not found at the configured path, the service will start normally and log a warning. YouTube videos that require authentication will still return a bot-check error until a valid cookies file is provided.
 
 ### On Fly.io
 
