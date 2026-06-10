@@ -60,6 +60,19 @@ To deploy subsequent updates:
 fly deploy
 ```
 
+## Deployment to Render
+
+You can deploy the service to [Render](https://render.com) using the included `render.yaml` Blueprint:
+
+1. Connect your repository to Render.
+2. Go to **Blueprints** and click **New Blueprint Instance**.
+3. Select this repository and click **Approve**.
+
+Alternatively, deploy it as a manual **Web Service** on Render:
+- **Runtime**: `Docker`
+- **Build Command**: Managed by Render.
+- **Start Command**: Managed by `Dockerfile`.
+
 ## API Endpoints
 
 - **Health Check**:

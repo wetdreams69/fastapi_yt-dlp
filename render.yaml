@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: fastapi-ytdlp
+    runtime: docker
+    healthCheckPath: /health
+    envVars:
+      - key: CACHE_TTL
+        value: 300
+      - key: LOG_LEVEL
+        value: INFO
