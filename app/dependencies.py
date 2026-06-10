@@ -12,9 +12,9 @@ from app.services.stream_service import StreamService
 _settings = get_settings()
 _cache = MemoryCache(ttl_seconds=_settings.cache_ttl)
 _resolver = RoutingResolver([
-    YoutubeResolver(),
-    TwitchResolver(),
-    PlutoResolver()
+    YoutubeResolver(cookies_file=_settings.cookies_file),
+    TwitchResolver(cookies_file=_settings.cookies_file),
+    PlutoResolver(cookies_file=_settings.cookies_file),
 ])
 
 

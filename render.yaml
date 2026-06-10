@@ -8,3 +8,5 @@ services:
         value: 300
       - key: LOG_LEVEL
         value: INFO
+      - key: COOKIES_FILE
+        value: /etc/secrets/cookies.txt

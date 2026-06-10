@@ -23,8 +23,48 @@ pip install -r requirements.txt
 
 Configurations are loaded from environment variables or a `.env` file using Pydantic Settings:
 
-- `CACHE_TTL`: Time-to-live for cache entries in seconds (default: `300`).
-- `LOG_LEVEL`: Application logging level (default: `"INFO"`).
+| Variable | Description | Default |
+|---|---|---|
+| `CACHE_TTL` | Cache entry lifetime in seconds | `300` |
+| `LOG_LEVEL` | Application log level | `INFO` |
+| `COOKIES_FILE` | Absolute path to a Netscape cookies file | `None` |
+
+## YouTube Cookies
+
+YouTube may return a **"Sign in to confirm you're not a bot"** error when accessed without authentication. The solution is to provide a cookies file exported from a browser session where you are already logged into YouTube.
+
+### Exporting Cookies
+
+Use the [cookies.txt browser extension](https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp) to export your YouTube cookies in Netscape format.
+
+### Locally (with Docker Compose)
+
+Place the exported file at `cookies/cookies.txt` in the project root. The `docker-compose.yml` will mount it automatically:
+
+```bash
+mkdir cookies
+cp ~/Downloads/cookies.txt cookies/cookies.txt
+docker compose up --build
+```
+
+The `COOKIES_FILE` env var is pre-configured to `/cookies/cookies.txt` inside the container.
+
+### On Render
+
+1. In the Render dashboard, go to your service → **Secret Files**.
+2. Create a secret file with the path `/etc/secrets/cookies.txt` and paste your cookies content.
+3. Set the `COOKIES_FILE` environment variable to `/etc/secrets/cookies.txt`.
+
+### On Fly.io
+
+1. Store the cookies file as a Fly secret or use a persistent volume.
+2. Set the `COOKIES_FILE` environment variable via `fly secrets`:
+   ```bash
+   fly secrets set COOKIES_FILE=/cookies/cookies.txt
+   ```
+
+> [!NOTE]
+> The `cookies/` directory is already listed in `.gitignore` to prevent credentials from being committed to the repository.
 
 ## Running the Application
 
@@ -48,16 +88,9 @@ docker compose up --build
 
 Ensure you have the `flyctl` CLI installed and are authenticated.
 
-To launch the app on Fly.io for the first time:
-
 ```bash
-fly launch
-```
-
-To deploy subsequent updates:
-
-```bash
-fly deploy
+fly launch   # first time
+fly deploy   # subsequent updates
 ```
 
 ## Deployment to Render
@@ -85,11 +118,9 @@ Alternatively, deploy it as a manual **Web Service** on Render:
   ```http
   GET /resolve?url=<url>
   ```
-  Resolves the provided URL directly to its highest resolution direct HLS `.m3u8` stream. Supports YouTube, Twitch, and Pluto TV.
+  Resolves the provided URL directly to its highest resolution HLS `.m3u8` stream. Supports YouTube, Twitch, and Pluto TV.
 
 ## Running Tests
-
-Run the test suite using pytest:
 
 ```bash
 python3 -m pytest

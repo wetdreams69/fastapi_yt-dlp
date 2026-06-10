@@ -5,6 +5,7 @@ from functools import lru_cache
 class Settings(BaseSettings):
     cache_ttl: int = 300
     log_level: str = "INFO"
+    cookies_file: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",

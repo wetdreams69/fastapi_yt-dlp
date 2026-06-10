@@ -6,11 +6,13 @@ from app.resolvers.resolver_interface import StreamResolver, ResolutionError
 
 class YtDlpBaseResolver(StreamResolver):
 
-    def __init__(self):
+    def __init__(self, cookies_file: str | None = None):
         self.options = {
             "quiet": True,
             "no_warnings": True,
         }
+        if cookies_file:
+            self.options["cookiefile"] = cookies_file
 
     def resolve(self, url: str) -> StreamInfo:
         try:
