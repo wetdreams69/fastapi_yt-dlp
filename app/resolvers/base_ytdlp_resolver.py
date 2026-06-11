@@ -19,7 +19,7 @@ class YtDlpBaseResolver(StreamResolver):
             "no_warnings": False,
             "extractor_args": {
                 "youtube": {
-                    "player_client": ["android"]
+                    "player_client": ["web"]
                 }
             }
         }
