@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-yt-dlp[default,quickjs]>=2026.06.09
+yt-dlp[default]>=2026.06.09
 pydantic
 pydantic-settings
 pytest
