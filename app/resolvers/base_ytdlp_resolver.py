@@ -35,6 +35,12 @@ class YtDlpBaseResolver(StreamResolver):
         try:
             with YoutubeDL(self.options) as ydl:
                 info = ydl.extract_info(url, download=False)
+                return {
+                    "id": info.get("id"),
+                    "title": info.get("title"),
+                    "live_status": info.get("live_status"),
+                    "formats_count": len(info.get("formats", []))
+                }
         except (DownloadError, Exception) as e:
             raise ResolutionError(str(e)) from e
 
