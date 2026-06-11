@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-yt-dlp
+yt-dlp>=2026.06.09
 pydantic
 pydantic-settings
 pytest
