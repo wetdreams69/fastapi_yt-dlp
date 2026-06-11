@@ -14,8 +14,14 @@ class YtDlpBaseResolver(StreamResolver):
 
     def __init__(self, cookies_file: str | None = None):
         self.options = {
-            "quiet": True,
-            "no_warnings": True,
+            "quiet": False,
+            "verbose": True,
+            "no_warnings": False,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android"]
+                }
+            }
         }
         if cookies_file:
             writable = self._writable_copy(cookies_file)
