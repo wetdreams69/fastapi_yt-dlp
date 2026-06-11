@@ -16,12 +16,7 @@ class YtDlpBaseResolver(StreamResolver):
         self.options = {
             "quiet": False,
             "verbose": True,
-            "no_warnings": False,
-            "extractor_args": {
-                "youtube": {
-                    "player_client": ["web"]
-                }
-            }
+            "no_warnings": False
         }
         if cookies_file:
             writable = self._writable_copy(cookies_file)
@@ -41,12 +36,12 @@ class YtDlpBaseResolver(StreamResolver):
         try:
             with YoutubeDL(self.options) as ydl:
                 info = ydl.extract_info(url, download=False)
-                return {
-                    "id": info.get("id"),
-                    "title": info.get("title"),
-                    "live_status": info.get("live_status"),
-                    "formats_count": len(info.get("formats", []))
-                }
+                logger.info(
+                    "video=%s live=%s formats=%s",
+                    info.get("id"),
+                    info.get("live_status"),
+                    len(info.get("formats", []))
+                )
         except (DownloadError, Exception) as e:
             raise ResolutionError(str(e)) from e
 
